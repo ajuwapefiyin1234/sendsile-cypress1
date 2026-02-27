@@ -1,0 +1,42 @@
+.otp-input {
+  flex: 1;
+  max-width: 65px;
+  height: 69px;
+  border: 1px solid #e3e6ed;
+  border-radius: 4px;
+}
+
+@media screen and (max-width: 350px) {
+  .otp-input {
+    flex: 1;
+    height: 45px;
+    border: 1px solid #e3e6ed;
+    border-radius: 4px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .otp-input {
+    flex: none;
+    min-width: 44px;
+    height: 45px;
+    border: 1px solid #e3e6ed;
+    border-radius: 4px;
+  }
+}
+
+.otp-input:focus {
+  border: 1px solid #e4572e;
+  outline: 4.5px solid #ffe6dc;
+}
+.otp-input-2 {
+  flex: 1;
+  height: 52px;
+  border: 1px solid #e3e6ed;
+  border-radius: 4px;
+}
+
+.otp-input-2:focus {
+  border: 1px solid #e4572e;
+  outline: 4.5px solid #ffe6dc;
+}
