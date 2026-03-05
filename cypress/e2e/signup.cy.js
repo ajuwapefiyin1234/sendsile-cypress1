@@ -1,6 +1,10 @@
+import { Sendsile } from "../configuration/project.config";
+
 describe("Sign Up Page", () => { // Group all signup-related tests.
+  const pageUrl = Sendsile.signup.pageUrl;
+
   beforeEach(() => { // Run this setup before every test case.
-    cy.visit("http://localhost:3000/sign-up"); // Open the signup page.
+    cy.visit(pageUrl); // Open the signup page.
   }); // End setup block.
 
   it("should load the signup form", () => { // Verify initial page render.
@@ -9,30 +13,30 @@ describe("Sign Up Page", () => { // Group all signup-related tests.
   }); // End render test.
 
   it("should allow user to type into signup fields", () => { // Verify user can fill fields.
-    cy.get("#fullname").type("Test User"); // Type full name.
-    cy.get("#email").type("test@example.com"); // Type email address.
-    cy.get("#password").type("Password123"); // Type password.
-    cy.get("#confirmPassword").type("Password123"); // Type confirm password.
+    cy.get(Sendsile.signup.nameId).type("Test User"); // Type full name.
+    cy.get(Sendsile.signup.emailId).type("test@example.com"); // Type email address.
+    cy.get(Sendsile.signup.passwordId).type("Password123"); // Type password.
+    cy.get(`#${Sendsile.signup.confirmPassword}`).type("Password123"); // Type confirm password.
 
-    cy.get("#fullname").should("have.value", "Test User"); // Assert full name value.
-    cy.get("#email").should("have.value", "test@example.com"); // Assert email value.
-    cy.get("#password").should("have.value", "Password123"); // Assert password value.
-    cy.get("#confirmPassword").should("have.value", "Password123"); // Assert confirm password value.
+    cy.get(Sendsile.signup.nameId).should("have.value", "Test User"); // Assert full name value.
+    cy.get(Sendsile.signup.emailId).should("have.value", "test@example.com"); // Assert email value.
+    cy.get(Sendsile.signup.passwordId).should("have.value", "Password123"); // Assert password value.
+    cy.get(`#${Sendsile.signup.confirmPassword}`).should("have.value", "Password123"); // Assert confirm password value.
   }); // End input test.
 
   it("should show validation error when passwords do not match", () => { // Verify client-side mismatch validation.
-    cy.get("#fullname").type("Test User"); // Type full name.
-    cy.get("#email").type("test@example.com"); // Type email address.
-    cy.get("#password").type("Password123"); // Type first password.
-    cy.get("#confirmPassword").type("Password321"); // Type different confirm password.
-    cy.contains("button", "Continue").click(); // Submit the form.
+    cy.get(Sendsile.signup.nameId).type("Test User"); // Type full name.
+    cy.get(Sendsile.signup.emailId).type("test@example.com"); // Type email address.
+    cy.get(Sendsile.signup.passwordId).type("Password123"); // Type first password.
+    cy.get(`#${Sendsile.signup.confirmPassword}`).type("Password321"); // Type different confirm password.
+    cy.contains("button", Sendsile.signup.button).click(); // Submit the form.
 
-    cy.contains("Passwords do not match").should("be.visible"); // Confirm validation message.
+    cy.contains(Sendsile.signup.message02).should("be.visible"); // Confirm validation message.
   }); // End mismatch validation test.
 
   it("should submit signup form successfully", () => { // Verify success flow with mocked API.
-    cy.intercept("POST", "**/register", { // Mock register endpoint.
-      statusCode: 200, // Return success status.
+    cy.intercept("POST", `**${Sendsile.signup.registerURL}`, { // Mock register endpoint.
+      statusCode: Sendsile.signup.statuscode, // Return success status.
       body: { // Mock response body.
         data: { // Mock payload object.
           email: "newuser@example.com", // Email returned by backend.
@@ -40,34 +44,34 @@ describe("Sign Up Page", () => { // Group all signup-related tests.
       }, // End response body.
     }).as("registerUser"); // Alias this request for waiting.
 
-    cy.get("#fullname").type("Test User"); // Fill full name.
-    cy.get("#email").type("newuser@example.com"); // Fill signup email.
-    cy.get("#password").type("Password123"); // Fill password.
-    cy.get("#confirmPassword").type("Password123"); // Fill matching confirm password.
-    cy.contains("button", "Continue").click(); // Submit signup form.
+    cy.get(Sendsile.signup.nameId).type("Test User"); // Fill full name.
+    cy.get(Sendsile.signup.emailId).type("newuser@example.com"); // Fill signup email.
+    cy.get(Sendsile.signup.passwordId).type("Password123"); // Fill password.
+    cy.get(`#${Sendsile.signup.confirmPassword}`).type("Password123"); // Fill matching confirm password.
+    cy.contains("button", Sendsile.signup.button).click(); // Submit signup form.
 
     cy.wait("@registerUser"); // Wait for mocked register request.
     cy.window().then((win) => { // Access browser window object.
       expect(win.localStorage.getItem("user_email")).to.eq("newuser@example.com"); // Verify saved email in localStorage.
     }); // End localStorage assertion.
-    cy.url().should("include", "/email-verification"); // Confirm redirect to email verification page.
+    cy.url().should("include", Sendsile.signup.emailURL); // Confirm redirect to email verification page.
   }); // End successful signup test.
 
   it("should show API error message when signup fails", () => { // Verify failure flow with mocked API error.
-    cy.intercept("POST", "**/register", { // Mock register endpoint failure.
-      statusCode: 400, // Return bad request status.
+    cy.intercept("POST", `**${Sendsile.signup.registerURL}`, { // Mock register endpoint failure.
+      statusCode: Sendsile.signup.statuscodefail, // Return bad request status.
       body: { // Mock error response body.
-        message: "Email already exists", // Error message shown to user.
+        message: Sendsile.signup.message03, // Error message shown to user.
       }, // End error body.
     }).as("registerUserFail"); // Alias failed request.
 
-    cy.get("#fullname").type("Test User"); // Fill full name.
-    cy.get("#email").type("existing@example.com"); // Fill already-used email.
-    cy.get("#password").type("Password123"); // Fill password.
-    cy.get("#confirmPassword").type("Password123"); // Fill confirm password.
-    cy.contains("button", "Continue").click(); // Submit signup form.
+    cy.get(Sendsile.signup.nameId).type("Test User"); // Fill full name.
+    cy.get(Sendsile.signup.emailId).type("existing@example.com"); // Fill already-used email.
+    cy.get(Sendsile.signup.passwordId).type("Password123"); // Fill password.
+    cy.get(`#${Sendsile.signup.confirmPassword}`).type("Password123"); // Fill confirm password.
+    cy.contains("button", Sendsile.signup.button).click(); // Submit signup form.
 
     cy.wait("@registerUserFail"); // Wait for failed mocked request.
-    cy.contains("Email already exists").should("be.visible"); // Confirm API error is displayed.
+    cy.contains(Sendsile.signup.message03).should("be.visible"); // Confirm API error is displayed.
   }); // End failure signup test.
 }); // End signup test suite.
