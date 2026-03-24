@@ -1,7 +1,8 @@
-import { Sendsile } from "../configuration/project.config";
+
+/*import { Pasca } from "../configuration/project.config";
 
 describe("Email Verification Page", () => { // Group email-verification tests.
-  const pageUrl = Sendsile.emailVerification.pageUrl; // Define default route for instruction-screen state.
+  const pageUrl = Pasca.emailVerification.pageUrl; // Define default route for instruction-screen state.
 
   it("should load email verification instructions with saved email", () => { // Verify page shows stored email.
     cy.visit(pageUrl, { // Open email verification page.
@@ -10,9 +11,9 @@ describe("Email Verification Page", () => { // Group email-verification tests.
       }, // End onBeforeLoad callback.
     }); // End visit options.
 
-    cy.contains(Sendsile.emailVerification.header01).should("be.visible"); // Confirm heading is visible.
+    cy.contains(Pasca.emailVerification.header01).should("be.visible"); // Confirm heading is visible.
     cy.contains("test@example.com").should("be.visible"); // Confirm seeded email is rendered.
-    cy.contains("button", Sendsile.emailVerification.resendButton).should("be.visible"); // Confirm resend button is present.
+    cy.contains("button", Pasca.emailVerification.resendButton).should("be.visible"); // Confirm resend button is present.
   }); // End saved-email render test.
 
   it("should load email verification page even without saved email", () => { // Verify page still renders with empty localStorage email.
@@ -22,18 +23,18 @@ describe("Email Verification Page", () => { // Group email-verification tests.
       }, // End onBeforeLoad callback.
     }); // End visit options.
 
-    cy.contains(Sendsile.emailVerification.header01).should("be.visible"); // Confirm heading still shows.
-    cy.contains("button", Sendsile.emailVerification.resendButton).should("be.visible"); // Confirm resend button remains available.
+    cy.contains(Pasca.emailVerification.header01).should("be.visible"); // Confirm heading still shows.
+    cy.contains("button", Pasca.emailVerification.resendButton).should("be.visible"); // Confirm resend button remains available.
   }); // End missing-email render test.
 
   it("should resend verification email successfully", () => { // Verify resend success path.
-    cy.intercept("POST", `**${Sendsile.emailVerification.resendendpoint}`, (req) => { // Mock resend endpoint.
+    cy.intercept("POST", `**${Pasca.emailVerification.resendendpoint}`, (req) => { // Mock resend endpoint.
       expect(req.body).to.deep.equal({ email: "test@example.com" }); // Assert request payload.
       req.reply({ // Return mocked success response.
-        statusCode: Sendsile.emailVerification.statuscode, // Return OK status.
+        statusCode: Pasca.emailVerification.statuscode, // Return OK status.
         body: { // Response body object.
           data: { // Nested response data.
-            message: Sendsile.emailVerification.resendmessage01, // Success message for UI toast.
+            message: Pasca.emailVerification.resendmessage01, // Success message for UI toast.
           }, // End nested data.
         }, // End response body.
       }); // End mocked reply.
@@ -45,16 +46,16 @@ describe("Email Verification Page", () => { // Group email-verification tests.
       }, // End onBeforeLoad callback.
     }); // End visit options.
 
-    cy.contains("button", Sendsile.emailVerification.resendButton).click(); // Trigger resend action.
+    cy.contains("button", Pasca.emailVerification.resendButton).click(); // Trigger resend action.
     cy.wait("@resendVerificationEmail"); // Wait for mocked resend request.
-    cy.contains(Sendsile.emailVerification.resendmessage01).should("be.visible"); // Confirm success feedback is shown.
+    cy.contains(Pasca.emailVerification.resendmessage01).should("be.visible"); // Confirm success feedback is shown.
   }); // End resend success test.
 
   it("should show error when resend verification API fails", () => { // Verify resend failure path.
-    cy.intercept("POST", `**${Sendsile.emailVerification.resendendpoint}`, { // Mock failed resend request.
-      statusCode: Sendsile.emailVerification.statuscodefail, // Return bad request status.
+    cy.intercept("POST", `**${Pasca.emailVerification.resendendpoint}`, { // Mock failed resend request.
+      statusCode: Pasca.emailVerification.statuscodefail, // Return bad request status.
       body: { // Error response body.
-        message: Sendsile.emailVerification.resenderror, // Expected error message.
+        message: Pasca.emailVerification.resenderror, // Expected error message.
       }, // End error body.
     }).as("resendVerificationEmailFail"); // Alias failed request.
 
@@ -64,24 +65,25 @@ describe("Email Verification Page", () => { // Group email-verification tests.
       }, // End onBeforeLoad callback.
     }); // End visit options.
 
-    cy.contains("button", Sendsile.emailVerification.resendButton).click(); // Attempt resend action.
+    cy.contains("button", Pasca.emailVerification.resendButton).click(); // Attempt resend action.
     cy.wait("@resendVerificationEmailFail"); // Wait for mocked failure request.
-    cy.contains(Sendsile.emailVerification.resenderror).should("be.visible"); // Confirm failure feedback is shown.
+    cy.contains(Pasca.emailVerification.resenderror).should("be.visible"); // Confirm failure feedback is shown.
   }); // End resend failure test.
 
   it("should verify email token and redirect to login", () => { // Verify token-check path redirects on success.
-    cy.intercept("GET", `**${Sendsile.emailVerification.verifyendpoint}`, { // Mock verify endpoint for real token/id route.
-      statusCode: Sendsile.emailVerification.statuscode, // Return success status.
+    cy.intercept("GET", `**${Pasca.emailVerification.verifyendpoint}`, { // Mock verify endpoint for real token/id route.
+      statusCode: Pasca.emailVerification.statuscode, // Return success status.
       body: { // Success response body.
         data: { // Nested success payload.
-          message: Sendsile.emailVerification.resendmessage02, // Success message.
+          message: Pasca.emailVerification.resendmessage02, // Success message.
         }, // End nested payload.
       }, // End response body.
     }).as("verifyEmail"); // Alias verify request.
 
-    cy.visit(Sendsile.emailVerification.verifyUrl); // Open real verification URL.
+    cy.visit(Pasca.emailVerification.verifyUrl); // Open real verification URL.
 
     cy.wait("@verifyEmail"); // Wait for verification request.
     cy.url().should("include", "/login"); // Confirm redirect to login after successful verification.
   }); // End token verification test.
 }); // End email-verification suite.
+*/

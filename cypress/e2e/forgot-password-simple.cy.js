@@ -2,12 +2,10 @@ const WEB_BASE_URL = "https://taxporta.fctirs.gov.ng/";
 const LOGIN_PATH = "login";
 const FORGOT_PASSWORD_PATH = "forgot-password";
 
-import { Taxporta } from "../configuration/project.config";
-
 const openForgotPasswordFromLogin = () => {
-  cy.visit(Taxporta.forgotpassword.pageUrl);
+  cy.visit(`${WEB_BASE_URL}${LOGIN_PATH}`);
   cy.wait(3000);
-  cy.contains(/Forgot password/i).should("exist");
+  cy.contains("Forgot password").should("exist").click({ force: true });
   cy.url().should("include", `/${FORGOT_PASSWORD_PATH}`);
 };
 
@@ -17,7 +15,7 @@ describe("Forgot Password Simple Tests", () => {
     cy.wait(3000);
     
     // Check we're on forgot password page
-    cy.url().should("include", Taxporta.forgotpassword.message03);
+    cy.url().should("include", "/forgot-password");
     cy.log("Forgot password page opened");
   });
 
@@ -26,11 +24,11 @@ describe("Forgot Password Simple Tests", () => {
     cy.wait(3000);
     
     // Look for email input field
-    cy.get(Taxporta.forgotpassword.email).type(Taxporta.forgotpassword.message14);
+    cy.get("input[type='email'], input[name='email'], input[placeholder*='email']").should("be.visible");
     cy.log("Email input field found");
     
     // Look for continue button
-    cy.contains("button", Taxporta.forgotpassword.message07).should("be.visible");
+    cy.contains("button", "Continue").should("be.visible");
     cy.log("Continue button found");
   });
 
@@ -39,19 +37,19 @@ describe("Forgot Password Simple Tests", () => {
     cy.wait(3000);
     
     // Type email address
-    cy.get(Taxporta.forgotpassword.email).type(Taxporta.forgotpassword.message14);
+    cy.get("input[type='email'], input[name='email'], input[placeholder*='email']").type("test@example.com");
     cy.log("Typed email address");
     
     // Click continue button
-    cy.contains("button", Taxporta.forgotpassword.message07).click();
+    cy.contains("button", "Continue").click();
     cy.wait(5000);
     
     // Check what actually happened
     cy.url().then(url => {
       cy.log(`Current URL after submit: ${url}`);
-      if (url.includes(Taxporta.forgotpassword.message03)) {
+      if (url.includes("/forgot-password")) {
         cy.log("Still on forgot password page - checking for success message");
-        cy.get(Taxporta.forgotpassword.message10).then($body => {
+        cy.get("body").then($body => {
           const text = $body.text();
           cy.log(`Page content: ${text}`);
         });

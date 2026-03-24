@@ -1,27 +1,20 @@
-// Read env values from Cypress at runtime.
-// If a key is missing, use the provided fallback so tests still run locally.
-// const getCypressEnv = (key, fallback) => {
-//     if (typeof Cypress !== "undefined" && typeof Cypress.env === "function") {
-//         const value = Cypress.env(key);
-//         return value ?? fallback;
-//     }
-//     return fallback;
-// };
-
 // Base URL for your frontend app pages visited by Cypress (e.g. /login, /sign-up).
-const WEB_BASE_URL = "http://localhost:3000";
+const WEB_BASE_URL = "https://taxporta.fctirs.gov.ng";
 // Base URL for your backend API used by app requests (staging by default fallback).
-const API_BASE_URL =  "https://staging-api.sendsile.com/api/v1"
+const API_BASE_URL = "https://taxporta.fctirs.gov.ng/api"
+
 // Route path for login page and login API intercept pattern.
-const LOGIN_PATH =  "/login"
+const LOGIN_PATH = "/login"
 // Route path for sign-up page.
-const SIGNUP_PATH =  "/sign-up"
+const SIGNUP_PATH = "/create-account"
+// Route path for create-password page.
+const CREATE_PASSWORD_PATH = "/create-password"
 // Route path for forgot-password page.
 const FORGOT_PASSWORD_PATH = "/forgot-password"
 // Route path template for email verification page.
-const EMAIL_VERIFICATION_PATH =  "/email-verification/:token/:id"
+const EMAIL_VERIFICATION_PATH = "/email-verification/:token/:id"
 // API path used for register endpoint intercepts.
-const REGISTER_API_PATH =  "/register"
+const REGISTER_API_PATH = "/register"
 // API path used for forgot-password reset-initiate intercepts.
 const RESET_INITIATE_API_PATH = "/password/reset/initiate"
 // API path used for resend verification email intercepts.
@@ -57,7 +50,7 @@ export const Sendsile = {
         loginemail:"user@example.com",
         loginpassword:"Password123",
         loginmessage03:"Invalid OTP",
-        instructionmessage01:"Enter the 6-digit code on your Authenticator App",
+        instructionmessage01:"Enter 6-digit code on your Authenticator App",
     },
     signup: {
         pageUrl: `${WEB_BASE_URL}${SIGNUP_PATH}`,
@@ -72,13 +65,13 @@ export const Sendsile = {
         responsemail: "user@example.com",
         message02: "Passwords do not match",
         registerURL: REGISTER_API_PATH,
-        emailURL: "/email-verification",
-        message03: "Email already exists",
+        message03: "Successfully filled vailable form fields",
         statuscodefail: 400,
-
+        waitcode: 3000,
+        message04: "Login link found",
     },
     emailVerification: {
-        pageUrl: `${WEB_BASE_URL}${EMAIL_VERIFICATION_PATH}`,
+        pageUrl: `${WEB_BASE_URL}/email-verification`,
         verifyUrl: `${WEB_BASE_URL}/email-verification/test-token/123?signature=abc&expires=1`,
         base: API_BASE_URL,
         header01: "Check your inbox",
@@ -108,11 +101,225 @@ export const Sendsile = {
         reseterror:"Unable to reset password",
         statuscode: 200,
         statuscodefail: 400,
-        emailtest: "test@example.com"
+        emailtest: "test@example.com",
+        firstDropdownText: "a, button:contains('Back'), button:contains('Login')",
         
 
-
-        
     }
 }
 
+export const MakeCards = {
+    login: {
+        pageUrl: `${WEB_BASE_URL}${LOGIN_PATH}`,
+        base: API_BASE_URL,
+        path: LOGIN_PATH,
+        phoneClassName: "PhoneInputInput",
+        message01: "Welcome back",
+        message01: "Login page should be accessible",
+        button: "Login",
+        buttonSelector: "a,button",
+        message02: "Login form should be visible",
+        formSelector: "form",
+        inputSelector: "input:visible",
+        message03: "Login form should have visible input fields",
+        message04: "Login should have visible submit button",
+        submitSelector: "button",
+        message05: "Login input should accept typing",
+        testInput: "08012345678",
+        message06: "Login input should not be empty and contain digits",
+        message07: "Login should not navigate away on empty submit",
+        buttonRegex: /continue|login|sign in|next/i,
+        buttonClickOptions: { force: true },
+        urlInclude: "login",
+        message08: "Create card button should be visible and clickable",
+        createCardButtonSelector: "a:visible,button:visible",
+        createCardButtonRegex: /create card/i,
+        createCardButtonClickOptions: { force: true },
+        createCardUrlRegex: /(create|card|onboard|register|verify|otp)/i,
+        createCardMessage: "Create card flow should open on click",
+        createCardUrlTimeout: 20000,
+        loginUrlTimeout: 20000,
+        loginButtonTimeout: 20000,
+        loginFormTimeout: 20000,
+        loginInputTimeout: 20000,
+        loginSubmitButtonTimeout: 20000,
+        createCardButtonTimeout: 20000,
+  }
+}
+
+export const Pasca = {
+    login: {
+        pageUrl: `${WEB_BASE_URL}${LOGIN_PATH}`,
+        base: API_BASE_URL,
+        path: LOGIN_PATH,
+        emailId: "input[type='email'], input[name='email'], input[placeholder*='email']",
+        passwordId: "input[type='password'], input[name='password'], input[placeholder*='password']",
+        button: "button[type='submit'], button:contains('Sign In'), button:contains('Login'), button:contains('Continue')",
+        message01: "BackLogin",
+        emailentry: "test@example.com",
+        passwordentry: "Password123",
+        message02:"Forgot password?",
+        message03:"Continue with google",
+        message04:"Invalid credentials",
+        wrongemail:"wrong@example.com",
+        wrongpassword:"wrongpassword",
+        statuscode: 200,
+        statuscodefail: 400,
+        testemail:"test@example.com",
+        testname:"Test User",
+        testbalance:0,
+        testphone:"0000000000",
+        photo:"",
+        temp_token:"temp-2fa-token",
+        loginUrl:"/login",
+        login2faUrl:"/login/2fa",
+        loginmessage01:"OTP",
+        loginmessage02:"OTP sent to your email",
+        loginemail:"test@example.com",
+        loginpassword:"Password123",
+        loginmessage03:"Invalid OTP",
+        instructionmessage01:"Enter 6-digit code on your Authenticator App",
+        forgotPasswordArray: ["forgot", "reset"]
+    },
+    signUp: {
+        pageUrl: `${WEB_BASE_URL}${SIGNUP_PATH}`,
+        base: API_BASE_URL,
+        header01: "Let's start by creating a free account",
+        header02: "Enter your business details",
+        nameId: "input[name='fullname'], input[placeholder*='name'], input[name='businessName']",
+        emailId: "input[name='email'], input[placeholder*='email'], input[type='email']",
+        passwordId: "input[name='password'], input[placeholder*='password'], input[type='password']",
+        confirmPassword: "input[name='confirmPassword'], input[placeholder*='confirm'], input[type='password']",
+        button: "button:contains('Continue'), button:contains('Create'), button:contains('Sign up')",
+        checkboxId: "input[type='checkbox']",
+        message01: "Account created successfully",
+        message02: "Passwords do not match",
+        statuscode: 200,
+        statuscodefail: 400,
+        inputId: "input[type='text'], input[type='email'], input[type='password']",
+        firstDropdownText: "Business Name",
+        message03: "Test Business",
+        message04: "test@example.com",
+        signUpArray: ["Let's start", "creating", "account", "Business"],
+        checkForLogin: "a:contains('Log in'), a:contains('Already have an account')",
+    },
+    createPassword: {
+        pageUrl: `${WEB_BASE_URL}${CREATE_PASSWORD_PATH}`,
+        base: API_BASE_URL,
+        header01: "Create Password",
+        header02: "Enter your new password",
+        passwordId: "input[type='password'], input[name='password'], input[placeholder*='password']",
+        confirmPassword: "input[type='password'], input[name='confirmPassword'], input[placeholder*='confirm']",
+        button: "button[type='submit'], button:contains('Create'), button:contains('Continue'), button:contains('Save')",
+        message01: "Create password page loaded successfully",
+        message02: "Passwords do not match",
+        message03: "Submit button found",
+        statuscode: 200,
+        statuscodefail: 400,
+        waitcode: 3000,
+        message04: "Successfully typed in password field",
+        message05: "Password form submitted successfully",
+        firstDropdownText: "TestPassword123",
+        secondDropdownText: "DifferentPassword456",
+        thirdDropdownText: "button[type='submit'], button:contains('Continue')",
+        createPasswordArray: ["Create", "Password"],
+    },
+    resetPassword: {
+        pageUrl: `${WEB_BASE_URL}/create-password`,
+        base: API_BASE_URL,
+        header01: "Reset Password", 
+        header02: "Enter your new password",
+        passwordId: "input[type='password'], input[name='password'], input[placeholder*='password']",
+        confirmPassword: "input[type='password'], input[name='confirmPassword'], input[placeholder*='confirm']",
+        button: "button[type='submit'], button:contains('Reset'), button:contains('Continue'), button:contains('Save')",
+        message01: "Password reset successfully",
+        message02: "Passwords do not match",
+        statuscode: 200,
+        statuscodefail: 400,
+        firstDropdownText: "TestPassword123",
+        secondDropdownText: "DifferentPassword456",
+        resetPasswordArray: ["Password", "Reset", "New"],
+    },
+    forgotPassword: {
+        pageUrl: `${WEB_BASE_URL}${FORGOT_PASSWORD_PATH}`,
+        path: FORGOT_PASSWORD_PATH,
+        base: API_BASE_URL,
+        header01: "Forgot your password?",
+        emailId: "input[type='email'], input[name='email'], input[placeholder*='email']",
+        resetButton: "button[type='submit'], button:contains('Reset'), button:contains('Send')",
+        rememberPassword: "a:contains('Remember'), a:contains('Back'), a:contains('Login')",
+        message01: "Set a new password",
+        resetURL: RESET_INITIATE_API_PATH,
+        message02: "Reset link sent",
+        message03: "Email does not exist",
+        reseterror: "Unable to reset password",
+        statuscode: 200,
+        statuscodefail: 400,
+        emailtest: "test@example.com",
+        message04: "Reset",
+        firstDropdownText: "a, button:contains('Back'), button:contains('Login')",
+    }
+}
+
+export const Taxporta = {
+    login: {
+        pageUrl: `${WEB_BASE_URL}${LOGIN_PATH}`,
+        base: API_BASE_URL,
+        path: LOGIN_PATH,
+        message01: "exist",
+        message02: /email address/i,
+        message03: /password/i,
+        message04: /continue/i,
+        message05: /login with payer id/i,
+        message06: /forgot password/i,
+        message07: /create account/i,
+        message08: /account login/i,
+        message09: "Forgot password link found",
+        message10: "Login page loaded successfully",
+        message11: "Successfully typed in login form fields",
+        message12: "Login page text links found",
+        message13: "Switched to Payer ID login",
+        message14: "Typed Payer ID",
+        message15: "Login button found",
+        message16: "Still on login page - may need additional steps",
+        message17: "Successfully logged in with Payer ID",
+        message18: "1234567890",
+        message19: "be visible",
+        message20: "/login",
+        waitcode01: 3000,
+        dropdownText01: "Forgot password",
+        dropdownText02: "Account Login",
+        dropdownText03: "Login with Payer ID",
+        dropdownText04: "Create account",
+        dropdownText05: "user@example.com",
+        dropdownText06: "Password123",
+        text: "input[type='text'], input[name='payerId'], input[placeholder*='payer'], input[placeholder*='ID']",
+        button: "button[type='submit'], button:contains('Continue'), button:contains('Submit'), button:contains('Login')",
+
+    },
+
+    forgotpassword: {
+        pageUrl: `${WEB_BASE_URL}${FORGOT_PASSWORD_PATH}`,
+        base: API_BASE_URL,
+        path: FORGOT_PASSWORD_PATH,
+        waitcode01: 3000,
+        waitcode02: 5000,
+        waitcode03: 2000,
+        message01: "Forgot Password",
+        message02: "exist",
+        message03: "/forgot-password",
+        message04: "Forgot password page opened",
+        message05: "Email input field found",
+        message06: "Continue button found",
+        email: "input[type='email'], input[name='email'], input[placeholder*='email']",
+        message07: "Continue",
+        message08: "be visible",
+        message09: "Typed email address",
+        message10: "body",
+        message11: "button",
+        message12: "Successfully navigated away from forgot password page",
+        message13: "Typed in",
+        message14: "test@example.com",
+        message15: "Still on forgot password page - checking for success message",
+    }
+}
