@@ -1,18 +1,23 @@
 // Base URL for your frontend app pages visited by Cypress (e.g. /login, /sign-up).
-const WEB_BASE_URL = "https://taxporta.fctirs.gov.ng";
+const WEB_BASE_URL =
+    typeof Cypress !== "undefined" && Cypress.config("baseUrl")
+        ? Cypress.config("baseUrl")
+        : "http://localhost:3000";
 // Base URL for your backend API used by app requests (staging by default fallback).
-const API_BASE_URL = "https://taxporta.fctirs.gov.ng/api"
+const API_BASE_URL =  "https://staging-api.sendsile.com/api/v1"
 
 // Route path for login page and login API intercept pattern.
 const LOGIN_PATH = "/login"
 // Route path for sign-up page.
-const SIGNUP_PATH = "/create-account"
+const SIGNUP_PATH = "/sign-up"
 // Route path for create-password page.
 const CREATE_PASSWORD_PATH = "/create-password"
 // Route path for forgot-password page.
 const FORGOT_PASSWORD_PATH = "/forgot-password"
-// Route path template for email verification page.
-const EMAIL_VERIFICATION_PATH = "/email-verification/:token/:id"
+// Route path for email verification instruction page.
+const EMAIL_VERIFICATION_PATH = "/email-verification"
+// Route path template for email verification link with params.
+const EMAIL_VERIFICATION_TOKEN_PATH = "/email-verification/:token/:id"
 // API path used for register endpoint intercepts.
 const REGISTER_API_PATH = "/register"
 // API path used for forgot-password reset-initiate intercepts.
@@ -69,9 +74,10 @@ export const Sendsile = {
         statuscodefail: 400,
         waitcode: 3000,
         message04: "Login link found",
+        emailURL: EMAIL_VERIFICATION_PATH,
     },
     emailVerification: {
-        pageUrl: `${WEB_BASE_URL}/email-verification`,
+        pageUrl: `${WEB_BASE_URL}${EMAIL_VERIFICATION_PATH}`,
         verifyUrl: `${WEB_BASE_URL}/email-verification/test-token/123?signature=abc&expires=1`,
         base: API_BASE_URL,
         header01: "Check your inbox",
@@ -103,8 +109,155 @@ export const Sendsile = {
         statuscodefail: 400,
         emailtest: "test@example.com",
         firstDropdownText: "a, button:contains('Back'), button:contains('Login')",
-        
+    },
+    dashboardtransaction: {
+        message01: "body",
+        message02: "be.visible",
+        message03: "transactions",
+        message04: "[OK] Found Transactions heading",
+        message05: "[OK] Found transaction-related content",
+        message06: "[NO] Transactions text not found",
+        message07: "input",
+        message08: "[NO] No inputs found",
+        message09: "placeholder",
+        message10: "type",
+        message11: "search",
+        message12: "test",
+        message13: "[OK] Typed in search input",
+        message14: "[NO] Search input not found",
+        message15: "transaction",
+        message16: "transaction type",
+        message17: "status",
+        message18: "date",
+        message19: "[OK] Found filter controls",
+        message20: "[NO] Filter controls not found",
+        message21: "include",
+        waitcode: 2000,
+    },
 
+    dashboard: {
+        message01: "body",
+        message02: "be.visible",
+        message03: "✅ Dashboard home page loaded",
+        message04: "dashboard",
+        message05: "groceries",
+        message06: "orders",
+        message07: "donations",
+        message08: "transactions",
+        message09: "✅ Found navigation elements",
+        message10: "❌ No navigation elements found",
+        message11: "button, a, input",
+        message12: "❌ No interactive elements found",
+        message13: "total",
+        message14: "recent",
+        message15: "overview",
+        message16: "✅ Found dashboard content",
+        message17: "❌ No dashboard content found",
+        message18: "div, section, article, main",
+        message19: "❌ No container elements found",
+        message20: "button",
+        waitcode01: 2000,
+        message21: "✅ Button clicked",
+        message22: "❌ No buttons to click",
+        message23: "❌ No links found",
+        message24: "/login",
+        message25: "✅ Redirected to login (authentication required)",
+        message26: "✅ Dashboard home page loaded successfully",
+        message27: "a",
+        message28: "✅ Found ${$elements.length} interactive elements",
+        message29: "Element ${index}: <${tagName}> '${text}'",
+        message30: "✅ Found ${$containers.length} container elements that might contain dashboard widgets",
+        message31: "✅ Clicking first button: '${buttonText}'",
+        message32: "✅ Found ${$links.length} links",
+        message33: "Link ${index}: '${text}' -> ${href}",
+        message34: "⚠️ Unexpected URL: ${url}",
+    },
+
+    dashboardprofile: {
+        pageUrl01: "/dashboard/profile",
+        waitcode: 2000,
+        message01: "include",
+        message02: "body",
+        message03: "be.visible",
+        message04: "contact information",
+        message05: "✅ Found Contact Information section",
+        message06: "❌ Contact Information section not found",
+        message07: "security",
+        message08: "✅ Found Security section",
+        message09: "❌ Security section not found",
+        message10: "Update address",
+        message11: "change address",
+        message12: "✅ Change Address page opened",
+        message13: "delivery address",
+        message14: "✅ Address form visible",
+        message15: "❌ Address form not detected",
+        message16: "Update password",
+        message17: "✅ Update password page opened",
+        message18: "❌ Update password page not detected",
+        message19: "input",
+        message20: "OldPass123!",
+        message21: "NewPass123!",
+        message22: "✅ Typed into password fields",
+        message23: "❌ Password inputs not found",
+        message24: "button",
+        message25: "✅ Clicked Update password button",
+        message26: "Enable two-factor authentication",
+        message27: "two-factor authentication",
+        message28: "✅ Two-factor authentication page opened",
+        message29: "authenticator",
+        message30: "✅ Authenticator instructions visible",
+        message31: "❌ Two-factor page not detected",
+        message32: "legal",
+        message33: "✅ Found Legal section",
+        message34: "❌ Legal section not found",
+        message35: "privacy policy",
+        message36: "✅ Found Privacy policy link",
+        message37: "terms of service",
+        message38: "✅ Found Terms of service link",
+        message39: "cookies",
+        message40: "✅ Found Cookies link",
+        waitcode02: 800,
+        message41: "open",
+        message42: "windowOpen",
+        message43: "Privacy policy",
+        message44: "@windowOpen",
+        message45: "have.been.called",
+        message46: "❌ Privacy policy URL not found",
+        message47: /terms of service/i,
+        message48: "Terms of Service",
+        message49: "❌ Terms of Service URL not found",
+        message50: "Cookie Notice",
+        message51: "❌ Cookies URL not found",
+        message52: "/dashboard/profile",
+        message53: "update password",
+        message54: "Cookies",
+    },
+    dashboardorders: {
+        pageUrl01: "/dashboard/orders",
+        waitcode01: 2000,
+        message01: "body",
+        message02: "be.visible",
+        message03: "✅ Dashboard orders page loaded",
+        message04: "/login",
+        message05: "✅ Orders page correctly redirects to login (authentication required)",
+        message06: "/orders",
+        message07: "✅ Orders page loaded successfully",
+        message08: "order",
+        message09: "purchase",
+        message10: "invoice",
+        message11: "transaction",
+        message12: "Page content: ${bodyText}",
+        message13: "✅ Page contains order-related content",
+        message14: "❌ No order-related content found",
+        message15: "⚠️ Unexpected URL: ${url}",
+        message16: "button, a, input",
+        message17: "✅ Found ${$elements.length} interactive elements",
+        message18: "Element ${index}: <${tagName}> '${text}'",
+        message19: "❌ No interactive elements found",
+        message20: "button, a",
+        message21: "✅ Clicking first ${tagName}: '${text}'",
+        message22: "✅ Element clicked",
+        message23: "❌ No clickable elements found",
     }
 }
 
@@ -293,6 +446,12 @@ export const Taxporta = {
         dropdownText04: "Create account",
         dropdownText05: "user@example.com",
         dropdownText06: "Password123",
+        dropdownText07: "TEST_EMAIL",
+        dropdownText08: "TEST_PASSWORD",
+        dropdownText09: "FORGOT_PASSWORD_TEXT",
+        dropdownText10: "ACCOUNT_LOGIN_HEADING",
+        dropdownText11: "PAYER_ID_TEXT",
+        dropdownText12: " CREATE_ACCOUNT_TEXT",
         text: "input[type='text'], input[name='payerId'], input[placeholder*='payer'], input[placeholder*='ID']",
         button: "button[type='submit'], button:contains('Continue'), button:contains('Submit'), button:contains('Login')",
 
@@ -321,5 +480,25 @@ export const Taxporta = {
         message13: "Typed in",
         message14: "test@example.com",
         message15: "Still on forgot password page - checking for success message",
+    },
+    loginpayer:{
+        pageUrl: `${WEB_BASE_URL}${LOGIN_PATH}`,
+        base: API_BASE_URL,
+        path: LOGIN_PATH,
+        message01: "be.visible",
+        message02: "/login",
+        message03: "Payer ID login link clicked",
+        inputtext: "input[type='text'], input[name='payerId'], input[placeholder*='payer'], input[placeholder*='ID']",
+        message04: "be.visible",
+        dropdownText01: "Login with Payer ID",
+        number: "1234567890",
+        message05: "Typed Payer ID successfully",
+        message06: "Typed Payer",
+        inputbutton: "button[type='submit'], button:contains('Continue'), button:contains('Submit'), button:contains('Login')",
+        waitcode: 3000,
+        message07: "body",
+        message08: "Successfully moved to next step or logged in",
+        message09: "Submit button found",
+        message10: "Still on login page - checking for changes",
     }
 }

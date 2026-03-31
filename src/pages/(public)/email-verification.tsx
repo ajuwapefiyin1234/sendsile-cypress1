@@ -49,30 +49,32 @@ const EmailVerification = () => {
 
   useEffect(() => {
     const handleVerifyEmail = async () => {
-      if (token !== ':token' && id !== ':id') {
-        try {
-          setLoading(true);
-          const res = await axiosPrivate.get(`/email/verify/${token}/${id}`, {
-            params: {
-              expires,
-              signature,
-            },
-          });
+      if (!token || !id || token === ':token' || id === ':id') {
+        return;
+      }
 
-          if (res.status === 200) {
-            navigate(ROUTES.login);
-          } else {
-            throw new Error();
-          }
-        } catch (error: any) {
-          toast.error(error?.response?.data?.message || 'Something went wrong');
-        } finally {
-          setLoading(false);
+      try {
+        setLoading(true);
+        const res = await axiosPrivate.get(`/email/verify/${token}/${id}`, {
+          params: {
+            expires,
+            signature,
+          },
+        });
+
+        if (res.status === 200) {
+          navigate(ROUTES.login);
+        } else {
+          throw new Error();
         }
+      } catch (error: any) {
+        toast.error(error?.response?.data?.message || 'Something went wrong');
+      } finally {
+        setLoading(false);
       }
     };
     handleVerifyEmail();
-  }, []);
+  }, [axiosPrivate, expires, id, navigate, signature, token]);
 
   return (
     <section className="bg-[#FCFAF6] min-h-screen w-full">

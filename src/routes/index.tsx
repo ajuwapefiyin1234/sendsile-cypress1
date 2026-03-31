@@ -53,6 +53,7 @@ export const route = createBrowserRouter(
         <Route path={ROUTES.forgotPassword} element={<ForgotPassword />} />
         <Route path={ROUTES.signUp} element={<SignUp />} />
         <Route path={ROUTES.emailVerification} element={<EmailVerification />} />
+        <Route path={ROUTES.emailVerificationToken} element={<EmailVerification />} />
         <Route path={ROUTES.payBills} element={<PayBills />} />
       </Route>
 
