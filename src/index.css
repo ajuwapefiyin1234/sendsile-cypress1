@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Aeonik';
+  src: url('./assets/fonts/Aeonik/Aeonik-Light.otf') format('opentype');
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aeonik';
+  src: url('./assets/fonts/Aeonik/Aeonik-LightItalic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aeonik';
+  src: url('./assets/fonts/Aeonik/Aeonik-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aeonik';
+  src: url('./assets/fonts/Aeonik/Aeonik-RegularItalic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aeonik';
+  src: url('./assets/fonts/Aeonik/Aeonik-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aeonik';
+  src: url('./assets/fonts/Aeonik/Aeonik-MediumItalic.otf') format('opentype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aeonik';
+  src: url('./assets/fonts/Aeonik/Aeonik-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aeonik';
+  src: url('./assets/fonts/Aeonik/Aeonik-BoldItalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aeonik';
+  src: url('./assets/fonts/Aeonik/Aeonik-Black.otf') format('opentype');
+  font-weight: 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aeonik';
+  src: url('./assets/fonts/Aeonik/Aeonik-BlackItalic.otf') format('opentype');
+  font-weight: 900;
+  font-display: swap;
+  font-style: italic;
+}
+
+* {
+  font-family: 'Aeonik';
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(216, 216, 216);
+  border-radius: 40px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.scale-up-center {
+  -webkit-animation: scale-up-center 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  animation: scale-up-center 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+
+@-webkit-keyframes scale-up-center {
+  0% {
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes scale-up-center {
+  0% {
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+  }
+
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+.overlay {
+  z-index: 999 !important;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 100%;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  border-radius: 12px;
+  background: #f3f3f3;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 12px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.secondLastColumn:nth-child(4) {
+  @apply min-w-[200px] md:min-w-[184px];
+}
+
+/* React datePicker package styles */
+.react-datepicker-wrapper {
+  display: flex !important;
+  height: 100% !important;
+}
+
+.toast-classname {
+  min-height: 40px !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+.toast-body-container {
+  font-family: 'Aeonik' !important;
+  font-size: 14px;
+}
+
+@keyframes slider {
+  0% {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@-webkit-keyframes slider {
+  0% {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.each-section-sliding {
+  animation: slider linear infinite;
+  -webkit-animation: slider linear infinite;
+  animation-duration: 100s;
+}
+
+@media screen and (min-width: 900px) {
+  .each-section-sliding {
+    animation-duration: 60s;
+  }
+}
