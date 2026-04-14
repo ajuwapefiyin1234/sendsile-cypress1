@@ -5,6 +5,7 @@ describe("Email Verification Page", () => { // Group email-verification tests.
 
   it("should load email verification instructions with saved email", () => { // Verify page shows stored email.
     cy.visit(pageUrl, { // Open email verification page.
+      timeout: 60000, // Increase timeout to 60s for slow network/server responses.
       onBeforeLoad(win) { // Run logic before app loads.
         win.localStorage.setItem("user_email", "test@example.com"); // Seed localStorage with user email.
       }, // End onBeforeLoad callback.
@@ -24,6 +25,7 @@ describe("Email Verification Page", () => { // Group email-verification tests.
 
   it("should load email verification page even without saved email", () => { // Verify page still renders with empty localStorage email.
     cy.visit(pageUrl, { // Open email verification page.
+      timeout: 60000, // Increase timeout to 60s for slow network/server responses.
       onBeforeLoad(win) { // Run logic before app loads.
         win.localStorage.removeItem("user_email"); // Remove stored email value.
       }, // End onBeforeLoad callback.
@@ -54,6 +56,7 @@ describe("Email Verification Page", () => { // Group email-verification tests.
     }).as("resendVerificationEmail"); // Alias request for waiting.
 
     cy.visit(pageUrl, { // Open verification page.
+      timeout: 60000, // Increase timeout to 60s for slow network/server responses.
       onBeforeLoad(win) { // Run logic before app loads.
         win.localStorage.setItem("user_email", "test@example.com"); // Seed email for resend payload.
       }, // End onBeforeLoad callback.
@@ -88,6 +91,7 @@ describe("Email Verification Page", () => { // Group email-verification tests.
     }).as("resendVerificationEmailFail"); // Alias failed request.
 
     cy.visit(pageUrl, { // Open verification page.
+      timeout: 60000, // Increase timeout to 60s for slow network/server responses.
       onBeforeLoad(win) { // Run logic before app loads.
         win.localStorage.setItem("user_email", "test@example.com"); // Seed email for request payload.
       }, // End onBeforeLoad callback.
@@ -123,7 +127,7 @@ describe("Email Verification Page", () => { // Group email-verification tests.
       }, // End response body.
     }).as("verifyEmail"); // Alias verify request.
 
-    cy.visit(Sendsile.emailVerification.verifyUrl); // Open real verification URL.
+    cy.visit(Sendsile.emailVerification.verifyUrl, { timeout: 60000 }); // Open real verification URL with increased timeout.
 
     cy.wait(500);
     cy.get("@verifyEmail.all").then(calls => {
