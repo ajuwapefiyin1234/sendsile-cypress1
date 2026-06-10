@@ -14,467 +14,271 @@ describe('Dashboard Page - Comprehensive Test', () => {
       return false;
     });
   });
+  it('should validate dashboard display and test all View List buttons', () => {
 
-  it('should validate dashboard display and handle all interactions in one flow', () => {
-    // 1. Visit login page and authenticate
+  
+  // LOGIN
+  
+  cy.visit('http://localhost:5173/login');
+  cy.wait(2000);
+
+  cy.get(
+    'input[type="email"], input[name*="email"], input[placeholder*="email"], [data-testid="email-input"]'
+  )
+    .first()
+    .clear()
+    .type(dashboard.email);
+
+  cy.get(
+    'input[type="password"], input[name*="password"], input[placeholder*="password"], [data-testid="password-input"]'
+  )
+    .first()
+    .clear()
+    .type(dashboard.password);
+
+  cy.get(
+    'button[type="submit"], button:contains("Login"), button:contains("Sign in"), [data-testid="login-button"]'
+  )
+    .first()
+    .click({ force: true });
+
+  cy.wait(4000);
+
+  
+  // VERIFY DASHBOARD LOADED
+  cy.url().should('include', '/dashboard');
+  cy.get('#root, body').should('be.visible');
+  cy.log('✅ Dashboard loaded successfully');
+
+  // VERIFY WELCOME MESSAGE
+  
+  cy.contains('Welcome').should('exist').then(() => {
+    cy.log('✅ Welcome message found');
+  });
+
+
+  // VERIFY DASHBOARD STAT SECTIONS
+
+  const statsSections = [
+    'Total Users',
+    'Total Revenue',
+    'Total Orders',
+    'Total Utility Payment',
+    'Donations'
+  ];
+
+  statsSections.forEach((section) => {
+    cy.contains(section).should('exist').then(($el) => {
+      expect($el).to.be.visible;
+      cy.log(`✅ Found dashboard section: ${section}`);
+    });
+  });
+
+  
+  // TOTAL USERS — VIEW LIST (1st button)
+  cy.log('Testing Total Users View List...');
+
+  cy.get('button:contains("View list"), a:contains("View list")')
+    .should('have.length.at.least', 1)
+    .eq(0)
+    .click({ force: true });
+
+  cy.wait(4000);
+
+  cy.url().then((url) => {
+    cy.log(`Navigated to: ${url}`);
+  });
+
+  cy.go('back');
+  cy.wait(4000);
+
+  cy.url().should('include', '/dashboard');
+  cy.log('✅ Total Users View List tested successfully');
+
+  
+  // TOTAL REVENUE — VIEW LIST (2nd button)
+  
+  cy.log('Testing Total Revenue View List...');
+
+  cy.get('button:contains("View list"), a:contains("View list")')
+    .should('have.length.at.least', 2)
+    .eq(1)
+    .click({ force: true });
+
+  cy.wait(4000);
+
+  cy.url().then((url) => {
+    cy.log(`Navigated to: ${url}`);
+  });
+
+  cy.go('back');
+  cy.wait(4000);
+
+  cy.url().should('include', '/dashboard');
+  cy.log('✅ Total Revenue View List tested successfully');
+
+  
+  // TOTAL ORDERS — VIEW LIST (3rd button)
+  cy.log('Testing Total Orders View List...');
+
+  cy.get('button:contains("View list"), a:contains("View list")')
+    .should('have.length.at.least', 3)
+    .eq(2)
+    .click({ force: true });
+
+  cy.wait(4000);
+
+  cy.url().then((url) => {
+    cy.log(`Navigated to: ${url}`);
+  });
+
+  cy.go('back');
+  cy.wait(4000);
+
+  cy.url().should('include', '/dashboard');
+  cy.log('✅ Total Orders View List tested successfully');
+
+  
+  // VERIFY SECTIONS WITHOUT VIEW LIST BUTTONS
+  cy.contains('Total Utility Payment').should('be.visible').then(() => {
+    cy.log('✅ Total Utility Payment section visible (no View list button)');
+  });
+
+  cy.contains('Donations').should('be.visible').then(() => {
+    cy.log('✅ Donations section visible (no View list button)');
+  });
+
+
+  // SCROLL DOWN TO QUICK ACCESS SECTION
+  cy.log('Scrolling down to Quick Access section...');
+
+  cy.contains('Quick Access').scrollIntoView({ duration: 1000 });
+  cy.wait(1500);
+
+
+  // QUICK ACCESS — MANAGE INVENTORY
+
+  cy.log('Testing Quick Access: Manage Inventory...');
+
+  cy.contains('Manage inventory').scrollIntoView({ duration: 800 });
+  cy.wait(1000);
+
+  cy.contains('Manage inventory').should('be.visible').click({ force: true });
+
+  cy.wait(4000);
+
+  cy.url().then((url) => {
+    cy.log(`Navigated to: ${url}`);
+  });
+
+  cy.go('back');
+  cy.wait(4000);
+
+  cy.url().should('include', '/dashboard');
+  cy.log('✅ Manage Inventory Quick Access tested successfully');
+
+  
+  // QUICK ACCESS — VIEW TRANSACTIONS
+
+  cy.log('Testing Quick Access: View Transactions...');
+
+  cy.contains('View transactions').scrollIntoView({ duration: 800 });
+  cy.wait(1000);
+
+  cy.contains('View transactions').should('be.visible').click({ force: true });
+
+  cy.wait(4000);
+
+  cy.url().then((url) => {
+    cy.log(`Navigated to: ${url}`);
+  });
+
+  cy.go('back');
+  cy.wait(4000);
+
+  cy.url().should('include', '/dashboard');
+  cy.log('✅ View Transactions Quick Access tested successfully');
+
+  // FINAL VERIFICATION
+  cy.url().should('include', '/dashboard');
+  cy.get('#root, body').should('be.visible');
+  cy.log('✅ Dashboard remains functional after all interactions');
+});
+
+   
+// ==========================================
+// RESPONSIVE DESIGN TEST
+// ==========================================
+describe('Dashboard - Responsive Design Test', () => {
+  it('should display correctly on mobile, tablet, and desktop screens', () => {
+
+    // Login
     cy.visit('http://localhost:5173/login');
-    cy.wait(2000);
 
-    // 2. Fill in login credentials
-    cy.get('input[type="email"], input[name*="email"], input[placeholder*="email"], [data-testid="email-input"]').first().clear().type(dashboard.email);
-    cy.get('input[type="password"], input[name*="password"], input[placeholder*="password"], [data-testid="password-input"]').first().clear().type(dashboard.password);
+    cy.get(
+      'input[type="email"], input[name*="email"], input[placeholder*="email"]'
+    )
+      .first()
+      .clear()
+      .type(dashboard.email);
 
-    // 3. Click login button
-    cy.get('button[type="submit"], button:contains("Login"), button:contains("Sign in"), button:contains("Submit"), [data-testid="login-button"]').first().click({ force: true });
-    cy.wait(3000);
+    cy.get(
+      'input[type="password"], input[name*="password"], input[placeholder*="password"]'
+    )
+      .first()
+      .clear()
+      .type(dashboard.password);
 
-    // 4. Verify we're on the dashboard
+    cy.get(
+      'button[type="submit"], [data-testid*="login"]'
+    )
+      .first()
+      .click({ force: true });
+
+    // Verify dashboard loaded
     cy.url().should('include', '/dashboard');
-    cy.wait(2000);
-
-    // 5. Verify dashboard loaded successfully
     cy.get('#root, body').should('be.visible');
-    cy.log('✅ Dashboard loaded successfully');
 
-    // 6. Test dashboard sections and interactions
-    cy.get('body').then(($body) => {
-      // Test Welcome message
-      const $welcome = $body.find('*:contains("Welcome"), *:contains("welcome")');
-      if ($welcome.length > 0) {
-        cy.log('✅ Welcome message found on page');
-      } else {
-        cy.log('⚠️ Welcome message not found');
-      }
+    // Test screen sizes
+    const viewports = [
+      {
+        name: 'Mobile',
+        width: 375,
+        height: 667,
+      },
+      {
+        name: 'Tablet',
+        width: 768,
+        height: 1024,
+      },
+      {
+        name: 'Desktop',
+        width: 1920,
+        height: 1080,
+      },
+    ];
 
-      // Test sidebar navigation
-      const $sidebar = $body.find('.sidebar, .nav, [data-testid*="nav"], [data-testid*="sidebar"]');
-      if ($sidebar.length > 0) {
-        cy.log('✅ Sidebar found');
-        // Test navigation items with flexible matching
-        const navItems = [
-          { primary: 'Home', alternatives: ['home', 'HOME'] },
-          { primary: 'Partner Management', alternatives: ['Partners', 'partner', 'Partner'] },
-          { primary: 'Order Management', alternatives: ['Orders', 'order', 'Order'] },
-          { primary: 'Customer Management', alternatives: ['Customers', 'Customer', 'customer'] },
-          { primary: 'Inventory', alternatives: ['inventory', 'INVENTORY'] },
-          { primary: 'Transactions', alternatives: ['Transaction', 'transaction', 'TRANSACTIONS'] },
-          { primary: 'Analytics', alternatives: ['analytics', 'ANALYTICS', 'Reports', 'reports'] },
-          { primary: 'Settings', alternatives: ['setting', 'SETTING', 'Profile', 'profile'] }
-        ];
-        
-        navItems.forEach((navItem) => {
-          // Create a combined selector with all alternatives
-          const allOptions = [navItem.primary, ...navItem.alternatives];
-          const combinedSelector = allOptions.map(option => `*:contains("${option}")`).join(', ');
-          
-          // Try to find any of the options
-          cy.get(combinedSelector, { timeout: 2000 }).then(($elements) => {
-            if ($elements && $elements.length > 0) {
-              cy.log(`✅ Found ${navItem.primary} in navigation`);
-              cy.wrap($elements).first().should('be.visible').click({ force: true });
-              cy.wait(1000);
-              cy.url().should('include', '/dashboard');
-            } else {
-              cy.log(`⚠️ ${navItem.primary} not found in navigation (tried: ${allOptions.join(', ')})`);
-            }
-          }, () => {
-            // This is the failure callback
-            cy.log(`⚠️ ${navItem.primary} not found in navigation (tried: ${allOptions.join(', ')})`);
-          });
-        });
-      } else {
-        cy.log('⚠️ No sidebar found - testing navigation in main content');
-        // Test main content navigation items with flexible matching
-        const mainNavItems = [
-          { primary: 'Home', alternatives: ['home', 'HOME'] },
-          { primary: 'Partner Management', alternatives: ['Partners', 'partner', 'Partner'] },
-          { primary: 'Order Management', alternatives: ['Orders', 'order', 'Order'] },
-          { primary: 'Customer Management', alternatives: ['Customers', 'Customer', 'customer'] },
-          { primary: 'Inventory', alternatives: ['inventory', 'INVENTORY'] },
-          { primary: 'Transactions', alternatives: ['Transaction', 'transaction', 'TRANSACTIONS'] },
-          { primary: 'Analytics', alternatives: ['analytics', 'ANALYTICS', 'Reports', 'reports'] },
-          { primary: 'Settings', alternatives: ['setting', 'SETTING', 'Profile', 'profile'] }
-        ];
-        
-        mainNavItems.forEach((navItem) => {
-          // Create a combined selector with all alternatives
-          const allOptions = [navItem.primary, ...navItem.alternatives];
-          const combinedSelector = allOptions.map(option => `*:contains("${option}")`).join(', ');
-          
-          // Try to find any of the options
-          cy.get(combinedSelector, { timeout: 2000 }).then(($elements) => {
-            if ($elements && $elements.length > 0) {
-              cy.log(`Found ${navItem.primary} in main content`);
-              cy.wrap($elements).first().should('be.visible').click({ force: true });
-              cy.wait(1000);
-              cy.url().should('include', '/dashboard');
-            } else {
-              cy.log(`⚠️ ${navItem.primary} not found in main content (tried: ${allOptions.join(', ')})`);
-            }
-          }, () => {
-            // This is the failure callback
-            cy.log(`⚠️ ${navItem.primary} not found in main content (tried: ${allOptions.join(', ')})`);
-          });
-        });
-      }
+    viewports.forEach((viewport) => {
+      cy.log(`Testing ${viewport.name} View`);
 
-      // Test dashboard statistics
-      const statsSections = ['Total Users', 'Total Revenue', 'Total Orders', 'Total Utility Payment', 'Donations'];
-      statsSections.forEach((section) => {
-        cy.get('body').then(($body) => {
-          const $section = $body.find(`*:contains("${section}")`);
-          if ($section.length > 0) {
-            cy.log(`✅ Found dashboard section: ${section}`);
-            cy.wrap($section).should('be.visible');
-            // Check if it contains data/value
-            cy.wrap($section).invoke('text').then((text) => {
-              if (text && text.trim()) {
-                cy.log(`✅ ${section} contains value/data`);
-              } else {
-                cy.log(`⚠️ ${section} section appears empty`);
-              }
-            });
-          }
-        });
-      });
+      // Change screen size
+      cy.viewport(viewport.width, viewport.height);
 
-      // Test "View list" buttons
-      cy.get('body').then(($body) => {
-        const $viewListButtons = $body.find('*:contains("View list"), *:contains("View List"), *:contains("view list")');
-        if ($viewListButtons.length > 0) {
-          cy.log(`Found ${$viewListButtons.length} "View list" buttons`);
-          $viewListButtons.each((index, button) => {
-            cy.wrap(button).then(($button) => {
-              if ($button.is(':visible') && $button.css('display') !== 'none') {
-                cy.log(`Testing View list button ${index + 1}`);
-                cy.wrap($button).click({ force: true });
-                cy.wait(1000);
-                cy.url().then((url) => {
-                  if (!url.includes('dashboard')) {
-                    cy.log(`Navigated to list view: ${url}`);
-                    cy.visit('http://localhost:5173/super-admin/dashboard');
-                    cy.wait(3000);
-                  }
-                });
-                cy.log(`✅ View list button ${index + 1} tested successfully`);
-              } else {
-                cy.log(`⚠️ View list button ${index + 1} is hidden`);
-              }
-            });
-          });
-        } else {
-          cy.log('No "View list" buttons found');
-        }
-      });
+        cy.wait(2000);
 
-      // Test Quick Access section
-      cy.get('body').then(($body) => {
-        const $quickAccess = $body.find('*:contains("Quick Access"), *:contains("quick access")');
-        if ($quickAccess.length > 0) {
-          cy.log('✅ Quick Access section found');
-          
-          // Test "Manage inventory"
-          cy.get('*:contains("Manage inventory"), *:contains("manage inventory")').then($elements => {
-            if ($elements.length > 0) {
-              cy.log('Testing "Manage inventory" link');
-              cy.wrap($elements).first().should('be.visible').click({ force: true });
-              cy.wait(1000);
-              cy.url().then((url) => {
-                if (!url.includes('dashboard')) {
-                  cy.log(`Navigated to inventory: ${url}`);
-                  cy.visit('http://localhost:5173/super-admin/dashboard');
-                  cy.wait(3000);
-                }
-              });
-              cy.log('✅ "Manage inventory" tested successfully');
-            }
-          });
-          
-          // Test "View transactions"
-          cy.get('*:contains("View transactions"), *:contains("view transactions")').then($elements => {
-            if ($elements.length > 0) {
-              cy.log('Testing "View transactions" link');
-              cy.wrap($elements).first().should('be.visible').click({ force: true });
-              cy.wait(1000);
-              cy.url().then((url) => {
-                if (!url.includes('dashboard')) {
-                  cy.log(`Navigated to transactions: ${url}`);
-                  cy.visit('http://localhost:5173/super-admin/dashboard');
-                  cy.wait(3000);
-                }
-              });
-              cy.log('✅ "View transactions" tested successfully');
-            }
-          });
-        } else {
-          cy.log('⚠️ Quick Access section not found');
-        }
-      });
-
-      // Test notification icon and user profile
-      cy.get('body').then(($body) => {
-        // Test notification icon
-        const $notificationIcon = $body.find('.notification, .bell, [data-testid*="notification"], [data-testid*="bell"], *:contains("notification")');
-        if ($notificationIcon.length > 0) {
-          cy.log('✅ Notification icon found');
-          cy.wrap($notificationIcon).first().should('be.visible').click({ force: true });
-          cy.wait(500);
-          cy.log('✅ Notification icon clicked successfully');
-        } else {
-          cy.log('⚠️ Notification icon not found');
-        }
-        
-        // Test user profile image
-        const $profileImage = $body.find('.profile, .avatar, [data-testid*="profile"], [data-testid*="avatar"], img[alt*="profile"], img[alt*="user"]');
-        if ($profileImage.length > 0) {
-          cy.log('✅ User profile image found');
-          cy.wrap($profileImage).first().should('be.visible').click({ force: true });
-          cy.wait(500);
-          cy.log('✅ User profile image clicked successfully');
-        } else {
-          cy.log('⚠️ User profile image not found');
-        }
-      });
-
-      // Final verification
+      // Verify dashboard still loads
       cy.url().should('include', '/dashboard');
+
+      // Verify page is visible
       cy.get('#root, body').should('be.visible');
-      cy.log('✅ Dashboard remains functional after all interactions');
-      cy.wait(1000);
+
+      cy.log(`✅ ${viewport.name} view displayed correctly`);
     });
+
+    cy.log('✅ Responsive Test Completed Successfully');
   });
-
-  // ==========================================
-  // RESPONSIVE DESIGN AND COMPREHENSIVE BUTTON TEST
-  // ==========================================
-  describe('Dashboard - Responsive Design and Button Testing', () => {
-    it('should be responsive on different screen sizes and handle all button interactions', () => {
-      // First, authenticate and navigate to dashboard
-      cy.visit('http://localhost:5173/login');
-      cy.wait(3000);
-
-      // Wait for login form to be visible
-      cy.get('body').should('be.visible');
-      cy.wait(1000);
-
-      // Fill in login credentials with more flexible selectors
-      cy.get('input[type="email"], input[name*="email"], input[placeholder*="email"], input[placeholder*="Email"], input[id*="email"], [data-testid*="email"], [data-testid*="email-input"]').then(($emailInputs) => {
-        if ($emailInputs.length > 0) {
-          cy.wrap($emailInputs).first().clear().type(dashboard.email);
-        } else {
-          // Try alternative selectors
-          cy.get('input').eq(0).clear().type(dashboard.email);
-        }
-      });
-
-      cy.get('input[type="password"], input[name*="password"], input[placeholder*="password"], input[placeholder*="Password"], input[id*="password"], [data-testid*="password"], [data-testid*="password-input"]').then(($passwordInputs) => {
-        if ($passwordInputs.length > 0) {
-          cy.wrap($passwordInputs).first().clear().type(dashboard.password);
-        } else {
-          // Try alternative selectors
-          cy.get('input').eq(1).clear().type(dashboard.password);
-        }
-      });
-
-      // Click login button with more flexible selectors
-      cy.get('button[type="submit"], button:contains("Login"), button:contains("Sign in"), button:contains("Submit"), button[type="button"], [data-testid*="login"], [data-testid*="login-button"], [data-testid*="submit"]').then(($buttons) => {
-        if ($buttons.length > 0) {
-          cy.wrap($buttons).first().click({ force: true });
-        } else {
-          // Try any button
-          cy.get('button').first().click({ force: true });
-        }
-      });
-
-      cy.wait(4000);
-
-      // Verify we're on the dashboard
-      cy.url().should('include', '/dashboard');
-      cy.wait(2000);
-
-      // Test different viewport sizes
-      const viewports = [
-        { name: 'Mobile', width: 375, height: 667 },
-        { name: 'Tablet', width: 768, height: 1024 },
-        { name: 'Desktop', width: 1920, height: 1080 }
-      ];
-
-      viewports.forEach(viewport => {
-        cy.log(`Testing ${viewport.name} view (${viewport.width}x${viewport.height})`);
-        cy.viewport(viewport.width, viewport.height);
-        cy.wait(1000);
-
-        // Verify dashboard is still functional after viewport change
-        cy.url().should('include', '/dashboard');
-        cy.get('#root, body').should('be.visible');
-        cy.log(`✅ Dashboard functional in ${viewport.name} view`);
-
-        // Get all clickable elements with fresh DOM query
-        cy.get('button, a, [role="button"], [tabindex="0"]').then(($buttons) => {
-          if ($buttons.length > 0) {
-            cy.log(`Found ${$buttons.length} clickable elements in ${viewport.name} view`);
-            
-            // Test first few buttons to avoid too many clicks
-            const buttonsToTest = Math.min($buttons.length, 5);
-            
-            for (let i = 0; i < buttonsToTest; i++) {
-              const $button = $buttons.eq(i);
-              const buttonText = $button.text().trim() || `Button ${i + 1}`;
-              cy.log(`Testing button ${i + 1}: "${buttonText}"`);
-              
-              // Get fresh DOM reference and click in isolated command
-              cy.get('body').then(($body) => {
-                const $freshButton = $body.find($button);
-                if ($freshButton.length > 0) {
-                  cy.wrap($freshButton).click({ force: true });
-                }
-              });
-              
-              // Wait for any navigation to complete
-              cy.wait(1000, { log: false });
-              
-              // Check URL and handle navigation
-              cy.url().then((url) => {
-                if (!url.includes('dashboard')) {
-                  cy.log(`Navigated away from dashboard to: ${url}`);
-                  
-                  // Return to dashboard
-                  cy.visit('http://localhost:5173/super-admin/dashboard');
-                  cy.wait(3000);
-                  
-                  // Re-authenticate if needed
-                  cy.url().then((currentUrl) => {
-                    if (currentUrl.includes('login')) {
-                      cy.log('Re-authenticating...');
-                      cy.clearCookies();
-                      cy.clearLocalStorage();
-                      
-                      cy.get('input[type="email"], input[name*="email"], input[placeholder*="email"], input[placeholder*="Email"], input[id*="email"], [data-testid*="email"], [data-testid*="email-input"]').then(($emailInputs) => {
-                        if ($emailInputs.length > 0) {
-                          cy.wrap($emailInputs).first().clear().type(dashboard.email);
-                        } else {
-                          cy.get('input').eq(0).clear().type(dashboard.email);
-                        }
-                      });
-                      cy.get('input[type="password"], input[name*="password"], input[placeholder*="password"], input[placeholder*="Password"], input[id*="password"], [data-testid*="password"], [data-testid*="password-input"]').then(($passwordInputs) => {
-                        if ($passwordInputs.length > 0) {
-                          cy.wrap($passwordInputs).first().clear().type(dashboard.password);
-                        } else {
-                          cy.get('input').eq(1).clear().type(dashboard.password);
-                        }
-                      });
-                      cy.get('button[type="submit"], button:contains("Login"), button:contains("Sign in"), button:contains("Submit"), button[type="button"], [data-testid*="login"], [data-testid*="login-button"], [data-testid*="submit"]').then(($buttons) => {
-                        if ($buttons.length > 0) {
-                          cy.wrap($buttons).first().click({ force: true });
-                        } else {
-                          cy.get('button').first().click({ force: true });
-                        }
-                      });
-                      
-                      cy.wait(3000);
-                    }
-                  });
-                } else {
-                  cy.log(`Still on dashboard after clicking button ${i + 1}`);
-                }
-              });
-              
-              cy.log(`✅ Button ${i + 1} tested successfully`);
-            }
-          } else {
-            cy.log(`⚠️ No clickable elements found in ${viewport.name} view`);
-          }
-        });
-
-        // Test specific interactive elements with fresh DOM query
-        const interactiveElements = [
-          { selector: '.notification, .bell, [data-testid*="notification"], [data-testid*="bell"]', name: 'Notification Icon' },
-          { selector: '.profile, .avatar, [data-testid*="profile"], [data-testid*="avatar"], img[alt*="profile"], img[alt*="user"]', name: 'Profile Image' },
-          { selector: '.menu-toggle, .hamburger, [data-testid*="menu"], [data-testid*="toggle"]', name: 'Menu Toggle' },
-          { selector: '.search-input, [data-testid*="search"], input[placeholder*="search"]', name: 'Search Input' },
-          { selector: '.filter-button, [data-testid*="filter"], button:contains("Filter")', name: 'Filter Button' }
-        ];
-
-        interactiveElements.forEach((element) => {
-          // Use cy.query() instead of cy.get() to avoid assertion errors
-          cy.document().then((doc) => {
-            const $elements = Cypress.$(element.selector, doc);
-            
-            if ($elements && $elements.length > 0) {
-              cy.log(`Testing ${element.name} in ${viewport.name} view`);
-              
-              // Test interaction with fresh DOM reference
-              cy.get('body').then(($body) => {
-                const $freshElement = $body.find($elements.first());
-                if ($freshElement.length > 0) {
-                  cy.wrap($freshElement).click({ force: true });
-                }
-              });
-              
-              // Wait for navigation to complete
-              cy.wait(500, { log: false });
-              
-              // Check URL and handle navigation
-              cy.url().then((url) => {
-                if (!url.includes('dashboard')) {
-                  cy.log(`Navigated away from dashboard after clicking ${element.name}`);
-                  cy.visit('http://localhost:5173/super-admin/dashboard');
-                  cy.wait(3000);
-                  
-                  // Re-authenticate if needed
-                  cy.url().then((currentUrl) => {
-                    if (currentUrl.includes('login')) {
-                      cy.log('Re-authenticating...');
-                      cy.clearCookies();
-                      cy.clearLocalStorage();
-                      
-                      cy.get('input[type="email"], input[name*="email"], input[placeholder*="email"], input[placeholder*="Email"], input[id*="email"], [data-testid*="email"], [data-testid*="email-input"]').then(($emailInputs) => {
-                        if ($emailInputs.length > 0) {
-                          cy.wrap($emailInputs).first().clear().type(dashboard.email);
-                        } else {
-                          cy.get('input').eq(0).clear().type(dashboard.email);
-                        }
-                      });
-                      cy.get('input[type="password"], input[name*="password"], input[placeholder*="password"], input[placeholder*="Password"], input[id*="password"], [data-testid*="password"], [data-testid*="password-input"]').then(($passwordInputs) => {
-                        if ($passwordInputs.length > 0) {
-                          cy.wrap($passwordInputs).first().clear().type(dashboard.password);
-                        } else {
-                          cy.get('input').eq(1).clear().type(dashboard.password);
-                        }
-                      });
-                      cy.get('button[type="submit"], button:contains("Login"), button:contains("Sign in"), button:contains("Submit"), button[type="button"], [data-testid*="login"], [data-testid*="login-button"], [data-testid*="submit"]').then(($buttons) => {
-                        if ($buttons.length > 0) {
-                          cy.wrap($buttons).first().click({ force: true });
-                        } else {
-                          cy.get('button').first().click({ force: true });
-                        }
-                      });
-                      
-                      cy.wait(3000);
-                    }
-                  });
-                }
-              });
-              
-              cy.log(`✅ ${element.name} tested successfully in ${viewport.name} view`);
-            } else {
-              cy.log(`⚠️ ${element.name} not found in ${viewport.name} view (selector: ${element.selector})`);
-            }
-          });
-        });
-      });
-
-      // Return to desktop view for final verification
-      cy.viewport(1920, 1080);
-      cy.wait(1000);
-
-      // Final verification
-      cy.url().should('include', '/dashboard');
-      cy.get('#root, body').should('be.visible');
-      cy.log('✅ Dashboard responsive and button testing completed successfully!');
-    });
-  });
-
+});
+ 
   // ==========================================
   // DASHBOARD ACTIONS TEST - VIEW LIST, MANAGE INVENTORY, VIEW TRANSACTIONS
   // ==========================================
